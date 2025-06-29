@@ -1,0 +1,21 @@
+/* Font Awesome Icons - Minimal version for ZERO Platform */
+.fa,.fas,.far,.fab{font-family:FontAwesome;font-weight:normal;font-style:normal;text-decoration:inherit}
+.fa-shield-alt:before{content:"🛡️"}
+.fa-network-wired:before{content:"🌐"}
+.fa-key:before{content:"🔑"}
+.fa-mobile-alt:before{content:"📱"}
+.fa-wifi:before{content:"📡"}
+.fa-bluetooth:before{content:"🔵"}
+.fa-exchange-alt:before{content:"🔄"}
+.fa-play:before{content:"▶️"}
+.fa-download:before{content:"⬇️"}
+.fa-upload:before{content:"⬆️"}
+.fa-cog:before{content:"⚙️"}
+.fa-home:before{content:"🏠"}
+.fa-user:before{content:"👤"}
+.fa-lock:before{content:"🔒"}
+.fa-fire:before{content:"🔥"}
+.fa-exclamation-triangle:before{content:"⚠️"}
+.fa-check:before{content:"✅"}
+.fa-times:before{content:"❌"}
+.fa-info:before{content:"ℹ️"}

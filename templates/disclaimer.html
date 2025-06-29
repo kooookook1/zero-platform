@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}ZERO Platform - إخلاء المسؤولية{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header text-center">
+                <h2 class="text-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    إخلاء المسؤولية - ZERO Platform
+                </h2>
+            </div>
+            <div class="card-body">
+                <!-- Copyright Notice -->
+                <div class="alert alert-info text-center mb-4">
+                    <h4>
+                        <i class="fas fa-copyright"></i>
+                        حقوق الملكية (حقوق اسم ZERO)
+                    </h4>
+                    <p class="mb-0">
+                        <strong>© 2025 ZERO Platform. All rights reserved.</strong>
+                    </p>
+                </div>
+
+                <!-- Main Disclaimer -->
+                <div class="alert alert-warning">
+                    <h5 class="warning-text">
+                        <i class="fas fa-shield-alt"></i>
+                        تنبيه هام - ZERO Platform
+                    </h5>
+                    <p>
+                        هذا الموقع (ZERO) مخصص للأغراض التعليمية واختبار الاختراق الأخلاقي فقط.<br>
+                        باستخدامك هذا الموقع وأدواته، أنت توافق على استخدامه فقط لاختبار الأنظمة التي تملكها أو لديك تصريح صريح بفحصها.
+                    </p>
+                    <p class="mb-0">
+                        <strong>ZERO Platform</strong> تتحمل مسؤولية تطوير الأدوات، لكنها لا تتحمل أي مسؤولية قانونية أو أخلاقية عن سوء استخدامك للأدوات.
+                    </p>
+                </div>
+
+                <!-- Detailed Terms -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-success">
+                            <i class="fas fa-check-circle"></i>
+                            الاستخدام المسموح:
+                        </h5>
+                        <ul>
+                            <li>اختبار الأنظمة المملوكة لك</li>
+                            <li>البحث والتعلم الأكاديمي</li>
+                            <li>اختبار الاختراق بموافقة صريحة</li>
+                            <li>تطوير مهارات الأمان السيبراني</li>
+                            <li>التدريب في بيئة معملية</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-danger">
+                            <i class="fas fa-times-circle"></i>
+                            الاستخدام المحظور:
+                        </h5>
+                        <ul>
+                            <li>مهاجمة أنظمة لا تملكها</li>
+                            <li>الوصول غير المصرح به</li>
+                            <li>سرقة البيانات أو المعلومات</li>
+                            <li>إلحاق الضرر بالأنظمة</li>
+                            <li>أي نشاط إجرامي أو ضار</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Legal Notice -->
+                <div class="alert alert-danger mt-4">
+                    <h5 class="text-danger">
+                        <i class="fas fa-gavel"></i>
+                        إخلاء المسؤولية القانونية:
+                    </h5>
+                    <ul class="mb-0">
+                        <li>أنت المسؤول الوحيد عن أي استخدام للأدوات المتوفرة</li>
+                        <li>ZERO Platform لا تتحمل أي مسؤولية عن الاستخدام الضار أو المخالف للقوانين</li>
+                        <li>أي استغلال أو هجوم على أنظمة خارج الشروط المذكورة يعتبر مخالف للقانون</li>
+                        <li>المستخدم يتحمل كامل المسؤولية القانونية عن أفعاله</li>
+                        <li>استخدامك للموقع يعني قبولك الكامل لهذه الشروط</li>
+                    </ul>
+                </div>
+
+                <!-- Copyright Details -->
+                <div class="alert alert-secondary">
+                    <h5>
+                        <i class="fas fa-copyright"></i>
+                        حقوق الملكية الفكرية:
+                    </h5>
+                    <p>
+                        هذا المشروع وجميع محتوياته وأدواته، بما في ذلك الكود والتصاميم والأدوات المقدمة، هي ملك حصري لمنصة ZERO.
+                        يُمنع نسخ أو إعادة توزيع أي جزء من هذا المشروع أو استخدام اسمه أو شعاره دون إذن كتابي صريح من إدارة ZERO.
+                    </p>
+                </div>
+
+                <!-- Agreement Form -->
+                <form method="POST" action="{{ url_for('accept_disclaimer') }}" class="mt-4">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            <strong>أوافق على جميع الشروط والأحكام المذكورة أعلاه</strong>
+                        </label>
+                    </div>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="agreeResponsibility" required>
+                        <label class="form-check-label" for="agreeResponsibility">
+                            <strong>أتحمل كامل المسؤولية عن استخدام الأدوات</strong>
+                        </label>
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="agreeEducational" required>
+                        <label class="form-check-label" for="agreeEducational">
+                            <strong>سأستخدم المنصة للأغراض التعليمية والقانونية فقط</strong>
+                        </label>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success btn-lg me-3" id="acceptBtn" disabled>
+                            <i class="fas fa-check"></i>
+                            أوافق وأريد المتابعة
+                        </button>
+                        <a href="{{ url_for('index') }}" class="btn btn-danger btn-lg">
+                            <i class="fas fa-times"></i>
+                            لا أوافق
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const acceptBtn = document.getElementById('acceptBtn');
+    
+    function updateButtonState() {
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        acceptBtn.disabled = !allChecked;
+    }
+    
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateButtonState);
+    });
+});
+</script>
+{% endblock %}

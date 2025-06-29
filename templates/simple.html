@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZERO Platform - اختبار بسيط</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            direction: rtl;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .status {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #28a745;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .tool-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .tool-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tool-desc {
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🔥 ZERO Platform</div>
+            <div class="subtitle">منصة شاملة لاختبار الأمان السيبراني والاختراق الأخلاقي</div>
+            
+            <div class="status">
+                ✅ الخادم يعمل بنجاح - جاهز للاستخدام
+            </div>
+        </div>
+        
+        <!-- Tools Grid -->
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-icon">🛡️</div>
+                <div class="tool-title">اختبار الويب</div>
+                <div class="tool-desc">SQLMap, Nikto, DirB, WhatWeb, WPScan</div>
+                <a href="/tools/web" class="btn">دخول الأدوات</a>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">🌐</div>
+                <div class="tool-title">فحص الشبكات</div>
+                <div class="tool-desc">Nmap, Masscan, Hping3, DNSEnum</div>
+                <a href="/tools/network" class="btn">دخول الأدوات</a>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">🔑</div>
+                <div class="tool-title">كلمات المرور</div>
+                <div class="tool-desc">Hydra, John, Hash-ID, CeWL, Crunch</div>
+                <a href="/tools/password" class="btn">دخول الأدوات</a>
+            </div>
+        </div>
+        
+        <!-- Quick Test -->
+        <div class="tool-card" style="margin: 30px 0;">
+            <div class="tool-title">🧪 اختبار سريع</div>
+            <div class="tool-desc">اختبر أداة Nmap على هدف آمن</div>
+            <button onclick="testTool()" class="btn">تشغيل اختبار</button>
+            <div id="test-result" style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px; display: none;"></div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="copyright">
+                © 2025 ZERO Platform. All rights reserved.<br>
+                للأغراض التعليمية واختبار الاختراق الأخلاقي فقط
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function testTool() {
+            const resultDiv = document.getElementById('test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '⏳ جاري تشغيل الاختبار...';
+            
+            fetch('/run_tool', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tool: 'nmap',
+                    target: 'scanme.nmap.org',
+                    options: '-sV'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultDiv.innerHTML = `❌ خطأ: ${data.error}`;
+                } else {
+                    resultDiv.innerHTML = `✅ نجح الاختبار!<br><pre style="text-align: left; direction: ltr; font-size: 0.8rem; margin-top: 10px;">${data.output || 'تم تشغيل الأداة بنجاح'}</pre>`;
+                }
+            })
+            .catch(error => {
+                resultDiv.innerHTML = `❌ خطأ في الاتصال: ${error.message}`;
+            });
+        }
+        
+        // Auto-refresh status
+        setInterval(() => {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Server status:', data);
+                })
+                .catch(error => {
+                    console.log('Server check failed:', error);
+                });
+        }, 30000);
+    </script>
+</body>
+</html>

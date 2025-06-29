@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+
+{% block title %}ZERO Platform - {{ tools.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>
+                    {% if category == 'web_testing' %}
+                        <i class="fas fa-globe text-primary"></i>
+                    {% elif category == 'network_scanning' %}
+                        <i class="fas fa-network-wired text-info"></i>
+                    {% elif category == 'password_attacks' %}
+                        <i class="fas fa-key text-warning"></i>
+                    {% elif category == 'android_tools' %}
+                        <i class="fab fa-android text-success"></i>
+                    {% elif category == 'wifi_attacks' %}
+                        <i class="fas fa-wifi text-danger"></i>
+                    {% elif category == 'bluetooth_attacks' %}
+                        <i class="fab fa-bluetooth text-primary"></i>
+                    {% elif category == 'mitm_attacks' %}
+                        <i class="fas fa-exchange-alt text-warning"></i>
+                    {% endif %}
+                    {{ tools.name }}
+                </h2>
+                <p class="text-muted">{{ tools.tools|length }} أدوات متوفرة في هذه الفئة</p>
+            </div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">
+                <i class="fas fa-arrow-right"></i>
+                العودة للوحة التحكم
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for tool_id, tool_data in tools.tools.items() %}
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-terminal text-success"></i>
+                    {{ tool_data.name }}
+                </h5>
+                <button class="btn btn-sm btn-primary" onclick="showToolModal('{{ tool_id }}', '{{ tool_data.name }}', '{{ tool_data.description }}')">
+                    <i class="fas fa-play"></i>
+                    تشغيل
+                </button>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ tool_data.description }}</p>
+                
+                <!-- Tool Info -->
+                <div class="row">
+                    <div class="col-6">
+                        <small class="text-muted">
+                            <i class="fas fa-code"></i>
+                            الأمر: <code>{{ tool_data.command }}</code>
+                        </small>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted">
+                            <i class="fas fa-cog"></i>
+                            معاملات افتراضية: {{ tool_data.params|length }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Tool Execution Modal -->
+<div class="modal fade" id="toolModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); color: white;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="toolModalTitle">
+                    <i class="fas fa-terminal text-success"></i>
+                    تشغيل الأداة
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Tool Description -->
+                <div class="alert alert-info" id="toolDescription">
+                    وصف الأداة سيظهر هنا
+                </div>
+                
+                <!-- Input Form -->
+                <form id="toolForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="toolTarget" class="form-label">الهدف (URL, IP, Domain):</label>
+                                <input type="text" class="form-control" id="toolTarget" placeholder="مثال: example.com أو 192.168.1.1">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="toolOptions" class="form-label">خيارات إضافية:</label>
+                                <input type="text" class="form-control" id="toolOptions" placeholder="اختياري">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- File Upload for specific tools -->
+                    <div class="mb-3" id="fileUploadSection" style="display: none;">
+                        <label for="toolFile" class="form-label">رفع ملف:</label>
+                        <input type="file" class="form-control" id="toolFile">
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success" id="runToolBtn">
+                            <i class="fas fa-play"></i>
+                            تشغيل الأداة
+                        </button>
+                        <button type="button" class="btn btn-danger" id="stopToolBtn" style="display: none;">
+                            <i class="fas fa-stop"></i>
+                            إيقاف
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Terminal Output -->
+                <div class="mt-4">
+                    <div class="terminal-header">
+                        <i class="fas fa-terminal"></i>
+                        مخرجات الأداة - ZERO Terminal
+                        <span class="float-end">
+                            <button class="btn btn-sm btn-outline-light" onclick="clearTerminal()">
+                                <i class="fas fa-trash"></i>
+                                مسح
+                            </button>
+                        </span>
+                    </div>
+                    <div class="terminal" id="terminalOutput">
+                        <div class="text-success">ZERO Platform Terminal Ready...</div>
+                        <div class="text-muted">جاهز لتشغيل الأدوات...</div>
+                    </div>
+                </div>
+                
+                <!-- Progress and Status -->
+                <div class="mt-3" id="toolStatus" style="display: none;">
+                    <div class="d-flex align-items-center">
+                        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                        <span>جاري تشغيل الأداة...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                <button type="button" class="btn btn-primary" onclick="downloadResults()" id="downloadBtn" style="display: none;">
+                    <i class="fas fa-download"></i>
+                    تحميل النتائج
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Warning Notice -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-warning">
+            <h6>
+                <i class="fas fa-exclamation-triangle"></i>
+                تنبيه قبل الاستخدام:
+            </h6>
+            <ul class="mb-0">
+                <li>تأكد من أن لديك الصلاحية لفحص الهدف المحدد</li>
+                <li>استخدم الأدوات فقط على الأنظمة التي تملكها أو لديك تصريح بفحصها</li>
+                <li>بعض الأدوات قد تستغرق وقتاً طويلاً للتنفيذ</li>
+                <li>النتائج ستظهر مباشرة في التيرمنال أدناه</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentSocket = null;
+let currentSessionId = null;
+let currentTool = null;
+
+// Initialize Socket.IO
+function initSocket() {
+    currentSocket = io();
+    
+    currentSocket.on('tool_output', function(data) {
+        if (data.session_id === currentSessionId) {
+            appendToTerminal(data.output, data.type);
+        }
+    });
+    
+    currentSocket.on('tool_complete', function(data) {
+        if (data.session_id === currentSessionId) {
+            appendToTerminal('\n=== تم انتهاء تشغيل الأداة ===', 'success');
+            appendToTerminal(`كود الخروج: ${data.exit_code}`, 'info');
+            document.getElementById('toolStatus').style.display = 'none';
+            document.getElementById('runToolBtn').style.display = 'inline-block';
+            document.getElementById('stopToolBtn').style.display = 'none';
+            document.getElementById('downloadBtn').style.display = 'inline-block';
+        }
+    });
+    
+    currentSocket.on('tool_error', function(data) {
+        if (data.session_id === currentSessionId) {
+            appendToTerminal(`خطأ: ${data.error}`, 'error');
+            document.getElementById('toolStatus').style.display = 'none';
+            document.getElementById('runToolBtn').style.display = 'inline-block';
+            document.getElementById('stopToolBtn').style.display = 'none';
+        }
+    });
+}
+
+function showToolModal(toolId, toolName, toolDescription) {
+    currentTool = toolId;
+    document.getElementById('toolModalTitle').innerHTML = `<i class="fas fa-terminal text-success"></i> ${toolName}`;
+    document.getElementById('toolDescription').textContent = toolDescription;
+    
+    // Show file upload for certain tools
+    const fileTools = ['apktool', 'john', 'aircrack'];
+    const fileSection = document.getElementById('fileUploadSection');
+    if (fileTools.includes(toolId)) {
+        fileSection.style.display = 'block';
+    } else {
+        fileSection.style.display = 'none';
+    }
+    
+    // Clear previous output
+    clearTerminal();
+    
+    // Show modal
+    new bootstrap.Modal(document.getElementById('toolModal')).show();
+    
+    // Initialize socket if not already done
+    if (!currentSocket) {
+        initSocket();
+    }
+}
+
+function appendToTerminal(text, type = 'stdout') {
+    const terminal = document.getElementById('terminalOutput');
+    const line = document.createElement('div');
+    
+    if (type === 'stderr' || type === 'error') {
+        line.className = 'text-danger';
+    } else if (type === 'success') {
+        line.className = 'text-success';
+    } else if (type === 'info') {
+        line.className = 'text-info';
+    } else {
+        line.className = 'text-light';
+    }
+    
+    line.textContent = text;
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+}
+
+function clearTerminal() {
+    const terminal = document.getElementById('terminalOutput');
+    terminal.innerHTML = `
+        <div class="text-success">ZERO Platform Terminal Ready...</div>
+        <div class="text-muted">جاهز لتشغيل الأدوات...</div>
+    `;
+}
+
+function downloadResults() {
+    if (currentSessionId) {
+        // This would typically trigger a download of the results file
+        appendToTerminal('تحميل النتائج...', 'info');
+        // Implementation would depend on backend setup
+    }
+}
+
+// Handle form submission
+document.getElementById('toolForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const target = document.getElementById('toolTarget').value.trim();
+    const options = document.getElementById('toolOptions').value.trim();
+    
+    if (!target && !['crunch', 'blue_hydra', 'bluelog'].includes(currentTool)) {
+        alert('يرجى إدخال الهدف');
+        return;
+    }
+    
+    // Prepare parameters
+    let params = [];
+    if (target) {
+        params.push(target);
+    }
+    if (options) {
+        params = params.concat(options.split(' '));
+    }
+    
+    // Show status
+    document.getElementById('toolStatus').style.display = 'block';
+    document.getElementById('runToolBtn').style.display = 'none';
+    document.getElementById('stopToolBtn').style.display = 'inline-block';
+    document.getElementById('downloadBtn').style.display = 'none';
+    
+    // Clear terminal
+    clearTerminal();
+    appendToTerminal(`بدء تشغيل ${currentTool} مع المعاملات: ${params.join(' ')}`, 'info');
+    
+    // Send request to backend
+    fetch('/run_tool', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            category: '{{ category }}',
+            tool: currentTool,
+            params: params
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            currentSessionId = data.session_id;
+            appendToTerminal(`تم بدء الجلسة: ${currentSessionId}`, 'success');
+        } else {
+            appendToTerminal(`خطأ: ${data.error}`, 'error');
+            document.getElementById('toolStatus').style.display = 'none';
+            document.getElementById('runToolBtn').style.display = 'inline-block';
+            document.getElementById('stopToolBtn').style.display = 'none';
+        }
+    })
+    .catch(error => {
+        appendToTerminal(`خطأ في الاتصال: ${error}`, 'error');
+        document.getElementById('toolStatus').style.display = 'none';
+        document.getElementById('runToolBtn').style.display = 'inline-block';
+        document.getElementById('stopToolBtn').style.display = 'none';
+    });
+});
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Any initialization code here
+});
+</script>
+{% endblock %}

@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}ZERO Platform - {{ tools.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>
+                    {% if category == 'web_testing' %}
+                        <i class="fas fa-globe text-primary"></i>
+                    {% elif category == 'network_scanning' %}
+                        <i class="fas fa-network-wired text-info"></i>
+                    {% elif category == 'password_attacks' %}
+                        <i class="fas fa-key text-warning"></i>
+                    {% endif %}
+                    {{ tools.name }}
+                </h2>
+                <p class="text-muted">{{ tools.tools|length }} أدوات متوفرة في هذه الفئة</p>
+            </div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light">
+                <i class="fas fa-arrow-right"></i>
+                العودة للوحة التحكم
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for tool_id, tool_data in tools.tools.items() %}
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-terminal text-success"></i>
+                    {{ tool_data.name }}
+                </h5>
+                <button class="btn btn-sm btn-primary" onclick="showToolModal('{{ tool_id }}', '{{ tool_data.name }}', '{{ tool_data.description }}')">
+                    <i class="fas fa-play"></i>
+                    تشغيل
+                </button>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ tool_data.description }}</p>
+                
+                <!-- Tool Info -->
+                <div class="row">
+                    <div class="col-6">
+                        <small class="text-muted">
+                            <i class="fas fa-code"></i>
+                            الأمر: <code>{{ tool_data.command }}</code>
+                        </small>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted">
+                            <i class="fas fa-cog"></i>
+                            معاملات افتراضية: {{ tool_data.params|length }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Tool Execution Modal -->
+<div class="modal fade" id="toolModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background: rgba(0, 0, 0, 0.95); color: white;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="toolModalTitle">
+                    <i class="fas fa-terminal text-success"></i>
+                    تشغيل الأداة
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Tool Description -->
+                <div class="alert alert-info" id="toolDescription">
+                    وصف الأداة سيظهر هنا
+                </div>
+                
+                <!-- Input Form -->
+                <form id="toolForm">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label for="toolTarget" class="form-label">الهدف (URL, IP, Domain):</label>
+                                <input type="text" class="form-control" id="toolTarget" placeholder="مثال: example.com أو 192.168.1.1">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="toolOptions" class="form-label">خيارات إضافية:</label>
+                                <input type="text" class="form-control" id="toolOptions" placeholder="اختياري">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success" id="runToolBtn">
+                            <i class="fas fa-play"></i>
+                            تشغيل الأداة
+                        </button>
+                        <div id="loadingSpinner" style="display: none;">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">جاري التحميل...</span>
+                            </div>
+                            <span class="ms-2">جاري تشغيل الأداة...</span>
+                        </div>
+                    </div>
+                </form>
+                
+                <!-- Results Display -->
+                <div class="mt-4" id="resultsSection" style="display: none;">
+                    <div class="terminal-header">
+                        <i class="fas fa-terminal"></i>
+                        نتائج الأداة - ZERO Platform
+                        <span class="float-end">
+                            <button class="btn btn-sm btn-outline-light" onclick="clearResults()">
+                                <i class="fas fa-trash"></i>
+                                مسح
+                            </button>
+                        </span>
+                    </div>
+                    <div class="terminal" id="terminalOutput">
+                        <!-- Results will be displayed here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                <button type="button" class="btn btn-primary" onclick="downloadResults()" id="downloadBtn" style="display: none;">
+                    <i class="fas fa-download"></i>
+                    تحميل النتائج
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Warning Notice -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="alert alert-warning">
+            <h6>
+                <i class="fas fa-exclamation-triangle"></i>
+                تنبيه قبل الاستخدام:
+            </h6>
+            <ul class="mb-0">
+                <li>تأكد من أن لديك الصلاحية لفحص الهدف المحدد</li>
+                <li>استخدم الأدوات فقط على الأنظمة التي تملكها أو لديك تصريح بفحصها</li>
+                <li>بعض الأدوات قد تستغرق وقتاً طويلاً للتنفيذ (حد أقصى 60 ثانية)</li>
+                <li>النتائج ستظهر مباشرة في المنطقة أدناه</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentTool = null;
+
+function showToolModal(toolId, toolName, toolDescription) {
+    currentTool = toolId;
+    document.getElementById('toolModalTitle').innerHTML = `<i class="fas fa-terminal text-success"></i> ${toolName}`;
+    document.getElementById('toolDescription').textContent = toolDescription;
+    
+    // Clear previous results
+    clearResults();
+    
+    // Show modal
+    new bootstrap.Modal(document.getElementById('toolModal')).show();
+}
+
+function clearResults() {
+    const resultsSection = document.getElementById('resultsSection');
+    const terminalOutput = document.getElementById('terminalOutput');
+    resultsSection.style.display = 'none';
+    terminalOutput.innerHTML = '';
+    document.getElementById('downloadBtn').style.display = 'none';
+}
+
+function displayResults(result) {
+    const resultsSection = document.getElementById('resultsSection');
+    const terminalOutput = document.getElementById('terminalOutput');
+    
+    resultsSection.style.display = 'block';
+    
+    let html = '';
+    
+    // Command executed
+    html += `<div class="text-info mb-2"><strong>الأمر المنفذ:</strong> ${result.command}</div>`;
+    
+    if (result.success) {
+        // Standard output
+        if (result.stdout) {
+            html += '<div class="text-success"><strong>المخرجات:</strong></div>';
+            html += `<pre class="text-light">${escapeHtml(result.stdout)}</pre>`;
+        }
+        
+        // Error output
+        if (result.stderr) {
+            html += '<div class="text-warning"><strong>تحذيرات/أخطاء:</strong></div>';
+            html += `<pre class="text-warning">${escapeHtml(result.stderr)}</pre>`;
+        }
+        
+        // Return code
+        html += `<div class="text-info mt-2"><strong>كود الخروج:</strong> ${result.returncode}</div>`;
+        
+        // Show download button
+        document.getElementById('downloadBtn').style.display = 'inline-block';
+    } else {
+        // Error occurred
+        html += `<div class="text-danger"><strong>خطأ:</strong> ${escapeHtml(result.error)}</div>`;
+    }
+    
+    terminalOutput.innerHTML = html;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+function downloadResults() {
+    const terminalOutput = document.getElementById('terminalOutput');
+    const content = terminalOutput.textContent;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `zero_results_${currentTool}_${new Date().getTime()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+}
+
+// Handle form submission
+document.getElementById('toolForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const target = document.getElementById('toolTarget').value.trim();
+    const options = document.getElementById('toolOptions').value.trim();
+    
+    if (!target && !['crunch', 'blue_hydra', 'bluelog'].includes(currentTool)) {
+        alert('يرجى إدخال الهدف');
+        return;
+    }
+    
+    // Prepare parameters
+    let params = [];
+    if (target) {
+        params.push(target);
+    }
+    if (options) {
+        params = params.concat(options.split(' '));
+    }
+    
+    // Show loading
+    document.getElementById('runToolBtn').style.display = 'none';
+    document.getElementById('loadingSpinner').style.display = 'block';
+    clearResults();
+    
+    // Send request to backend
+    fetch('/run_tool', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            category: '{{ category }}',
+            tool: currentTool,
+            params: params
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Hide loading
+        document.getElementById('runToolBtn').style.display = 'inline-block';
+        document.getElementById('loadingSpinner').style.display = 'none';
+        
+        // Display results
+        displayResults(data);
+    })
+    .catch(error => {
+        // Hide loading
+        document.getElementById('runToolBtn').style.display = 'inline-block';
+        document.getElementById('loadingSpinner').style.display = 'none';
+        
+        // Display error
+        displayResults({
+            success: false,
+            error: `خطأ في الاتصال: ${error}`,
+            command: 'Unknown'
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}ZERO Platform - الصفحة الرئيسية{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-4">
+                <i class="fas fa-shield-alt text-success"></i>
+                مرحباً بك في منصة ZERO
+            </h1>
+            <p class="lead">
+                منصة متكاملة لاختبار الأمان السيبراني والاختراق الأخلاقي
+            </p>
+            <p class="text-muted">
+                أدوات قوية ومتقدمة لاختبار الأنظمة والشبكات بطريقة آمنة وقانونية
+            </p>
+        </div>
+
+        <!-- Features Cards -->
+        <div class="row mb-5">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-globe fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">اختبار المواقع</h5>
+                        <p class="card-text">فحص شامل لثغرات المواقع والتطبيقات</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-network-wired fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">فحص الشبكات</h5>
+                        <p class="card-text">مسح وتحليل الشبكات والخدمات</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body">
+                        <i class="fas fa-mobile-alt fa-3x text-danger mb-3"></i>
+                        <h5 class="card-title">أدوات متنوعة</h5>
+                        <p class="card-text">أندرويد، واي فاي، بلوتوث وأكثر</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Notice -->
+        <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading">
+                <i class="fas fa-exclamation-triangle"></i>
+                تنبيه هام
+            </h4>
+            <p>
+                هذه المنصة مخصصة للأغراض التعليمية واختبار الاختراق الأخلاقي فقط.
+                يجب استخدام الأدوات فقط على الأنظمة التي تملكها أو لديك تصريح صريح لفحصها.
+            </p>
+            <hr>
+            <p class="mb-0">
+                <strong>ZERO Platform</strong> غير مسؤولة عن أي استخدام غير قانوني أو ضار للأدوات المتوفرة.
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center">
+            <a href="{{ url_for('disclaimer') }}" class="btn btn-primary btn-lg me-3">
+                <i class="fas fa-play"></i>
+                البدء في الاستخدام
+            </a>
+            <button class="btn btn-outline-light btn-lg" data-bs-toggle="modal" data-bs-target="#aboutModal">
+                <i class="fas fa-info-circle"></i>
+                حول المنصة
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- About Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: rgba(0, 0, 0, 0.9); color: white;">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-info-circle text-primary"></i>
+                    حول منصة ZERO
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="text-success">الأدوات المتوفرة:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success"></i> <strong>اختبار الويب:</strong> SQLMap, Nikto, DirB, WhatWeb, WPScan</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>فحص الشبكات:</strong> Nmap, Masscan, Hping3, DNSEnum</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>كلمات المرور:</strong> Hydra, John the Ripper, Hashcat</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>أندرويد:</strong> MSFVenom, APKTool, Objection, JADX</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>الواي فاي:</strong> Aircrack-ng, Reaver, Wifite</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>البلوتوث:</strong> Blue Hydra, BTScanner, Ubertooth</li>
+                    <li><i class="fas fa-check text-success"></i> <strong>MITM:</strong> Ettercap, MITMProxy, SSLStrip</li>
+                </ul>
+                
+                <hr>
+                
+                <h6 class="text-warning">المميزات:</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-star text-warning"></i> تشغيل حقيقي للأدوات</li>
+                    <li><i class="fas fa-star text-warning"></i> نتائج مباشرة وتفصيلية</li>
+                    <li><i class="fas fa-star text-warning"></i> واجهة عربية سهلة الاستخدام</li>
+                    <li><i class="fas fa-star text-warning"></i> تحميل التقارير</li>
+                    <li><i class="fas fa-star text-warning"></i> بيئة آمنة ومعزولة</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إغلاق</button>
+                <a href="{{ url_for('disclaimer') }}" class="btn btn-primary">البدء الآن</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
